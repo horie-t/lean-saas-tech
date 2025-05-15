@@ -1,84 +1,84 @@
-# EKS Cluster with Fargate
+# Fargateを使用したEKSクラスタ
 
-This Terraform configuration creates an Amazon EKS (Elastic Kubernetes Service) cluster using AWS Fargate in the us-west-2 region.
+このTerraform設定は、us-west-2リージョンでAWS Fargateを使用してAmazon EKS（Elastic Kubernetes Service）クラスタを作成します。
 
-## Architecture
+## アーキテクチャ
 
-The infrastructure includes:
+このインフラストラクチャには以下が含まれます：
 
-- A VPC with public and private subnets across three availability zones
-- An EKS cluster running on Fargate (serverless)
-- IAM roles and policies for the EKS cluster and Fargate profiles
-- Security groups for the EKS cluster
+- 3つのアベイラビリティゾーンにまたがるパブリックサブネットとプライベートサブネットを持つVPC
+- Fargate上で実行されるEKSクラスタ（サーバーレス）
+- EKSクラスタとFargateプロファイル用のIAMロールとポリシー
+- EKSクラスタ用のセキュリティグループ
 
-## Prerequisites
+## 前提条件
 
-- [Terraform](https://www.terraform.io/downloads.html) (version >= 1.0.0)
-- [AWS CLI](https://aws.amazon.com/cli/) configured with appropriate credentials
-- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) for interacting with the Kubernetes cluster
+- [Terraform](https://www.terraform.io/downloads.html)（バージョン >= 1.0.0）
+- 適切な認証情報で設定された[AWS CLI](https://aws.amazon.com/cli/)
+- Kubernetesクラスタと対話するための[kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
-## Usage
+## 使用方法
 
-1. Initialize the Terraform configuration:
+1. Terraform設定を初期化します：
 
 ```bash
 terraform init
 ```
 
-2. Review the planned changes:
+2. 計画された変更を確認します：
 
 ```bash
 terraform plan
 ```
 
-3. Apply the configuration:
+3. 設定を適用します：
 
 ```bash
 terraform apply
 ```
 
-4. After the cluster is created, configure kubectl to connect to your cluster:
+4. クラスタが作成された後、kubectlを設定してクラスタに接続します：
 
 ```bash
 aws eks update-kubeconfig --region us-west-2 --name lean-saas-eks-cluster
 ```
 
-5. Verify the connection:
+5. 接続を確認します：
 
 ```bash
 kubectl get nodes
 ```
 
-## Variables
+## 変数
 
-| Name | Description | Default |
+| 名前 | 説明 | デフォルト値 |
 |------|-------------|---------|
-| cluster_name | Name of the EKS cluster | lean-saas-eks-cluster |
-| cluster_version | Kubernetes version to use for the EKS cluster | 1.24 |
-| region | AWS region to deploy the EKS cluster | us-west-2 |
+| cluster_name | EKSクラスタの名前 | lean-saas-eks-cluster |
+| cluster_version | EKSクラスタに使用するKubernetesバージョン | 1.24 |
+| region | EKSクラスタをデプロイするAWSリージョン | us-west-2 |
 
-For a complete list of variables, see the `variables.tf` file.
+変数の完全なリストについては、`variables.tf`ファイルを参照してください。
 
-## Outputs
+## 出力
 
-| Name | Description |
+| 名前 | 説明 |
 |------|-------------|
-| cluster_endpoint | Endpoint for EKS control plane |
-| cluster_id | EKS cluster ID |
-| configure_kubectl | Command to configure kubectl |
+| cluster_endpoint | EKSコントロールプレーンのエンドポイント |
+| cluster_id | EKSクラスタID |
+| configure_kubectl | kubectlを設定するためのコマンド |
 
-For a complete list of outputs, see the `outputs.tf` file.
+出力の完全なリストについては、`outputs.tf`ファイルを参照してください。
 
-## Cleanup
+## クリーンアップ
 
-To destroy the created resources:
+作成したリソースを破棄するには：
 
 ```bash
 terraform destroy
 ```
 
-## Notes
+## 注意事項
 
-- This configuration uses Fargate profiles for running pods, which means there are no EC2 instances to manage.
-- The cluster is configured with the minimum necessary resources for a development environment.
-- For production use, consider additional security measures and resource configurations.
+- この設定では、ポッドの実行にFargateプロファイルを使用しているため、管理するEC2インスタンスはありません。
+- このクラスタは開発環境に必要な最小限のリソースで構成されています。
+- 本番環境での使用には、追加のセキュリティ対策とリソース構成を検討してください。
