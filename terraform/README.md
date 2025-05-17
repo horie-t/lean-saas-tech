@@ -11,6 +11,7 @@
 - EKSクラスタとFargateプロファイル用のIAMロールとポリシー
 - EKSクラスタ用のセキュリティグループ
 - Helmプロバイダを使用したKubernetesアプリケーションのデプロイと管理機能
+- Helmチャートを使用したArgoCDのインストールと設定
 
 ## 前提条件
 
@@ -78,8 +79,37 @@ kubectl get nodes
 terraform destroy
 ```
 
+## ArgoCD
+
+このTerraform設定には、Helmチャートを使用したArgoCDのインストールが含まれています。ArgoCDは、Kubernetesのための宣言型GitOpsの継続的デリバリーツールです。
+
+### ArgoCDへのアクセス
+
+ArgoCDがデプロイされた後、以下のコマンドを使用してArgoCDサーバーのURLを取得できます：
+
+```bash
+terraform output argocd_server_url_command
+```
+
+表示されたコマンドを実行して、ArgoCDサーバーのURLを取得します。
+
+### 初期管理者パスワードの取得
+
+ArgoCDの初期管理者パスワードを取得するには、以下のコマンドを使用します：
+
+```bash
+terraform output argocd_admin_password_command
+```
+
+表示されたコマンドを実行して、初期管理者パスワードを取得します。
+
+### ログイン
+
+ArgoCDのWebUIにアクセスし、ユーザー名「admin」と取得したパスワードを使用してログインします。
+
 ## 注意事項
 
 - この設定では、ポッドの実行にFargateプロファイルを使用しているため、管理するEC2インスタンスはありません。
 - このクラスタは開発環境に必要な最小限のリソースで構成されています。
 - 本番環境での使用には、追加のセキュリティ対策とリソース構成を検討してください。
+- ArgoCDは「argocd」名前空間にデプロイされ、専用のFargateプロファイルを使用します。
